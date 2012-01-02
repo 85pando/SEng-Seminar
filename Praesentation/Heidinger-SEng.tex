@@ -1,0 +1,94 @@
+\documentclass[ngerman, utf8, bigger, xcolor={table,dvipsnames}, ompress, hyperref={bookmarks,colorlinks}]{beamer}
+\title[Embedded Systems]{Software Engineering in Embedded Systems}
+\author{Stephan Heidinger}
+\date{Datum} %hier Datum des Vortrags einfügen
+\institute[Seng-Seminar]{Seminar: Software Engineering \\ Fachbereich für Informatik und Informationssysteme \\ Universtität Konstanz}
+%\setbeameroption{}
+%\setbeamerfont{}{}
+%\setbeamercolor{}{}
+%\setbeamertemplate{}{}
+
+%\usetheme{AnnArbor} %mit farbanpassung evtl
+%\usetheme{Antibes}
+%\usetheme{Berkeley} %mit sidebar, aber wenig struktur
+%\usetheme{Hannover} %wie berkeley, aber weniger zeug
+%\usetheme{Marburg} %pornosidebar
+\usetheme{Berlin} %"history" im header
+%\usetheme{Boadilla} %nur footer, der aber gut
+%\usetheme{CambridgeUS} %←←←←←schick
+%\usetheme{Madrid}
+
+%\usetheme{Goettingen}
+
+%\usecolortheme{}
+%\useinnertheme{}
+%\useoutertheme{}
+%\usefontheme{}
+
+%setze normale navileiste auf null
+%\setbeamertemplate{footline}{} \setbeamertemplate{navigation symbols}{}
+%füge neue Navigationsleiste in die sidebar ein, die nur overlay und frame hat
+%\setbeamertemplate{sidebar left}{\vspace*{\fill} \scalebox{1}[2]{\insertslidenavigationsymbol} \scalebox{1}[2]{\insertframenavigationsymbol}}
+
+%standardoverlayreihenfolge: aktuelles overlay und auf allen danach
+\beamerdefaultoverlayspecification{<+->}
+%dasselbe + highlight auf dem aktuellen
+%\beamerdefaultoverlayspecification{<+-| alert@+>}
+
+%unsichtbarer text ist halb sichtbar
+\setbeamercovered{transparent=25}
+
+%\usetheme{Antibes}
+%\usecolortheme{dove}
+%\useinnertheme{circles}
+%\useoutertheme{sidebar}
+\newcommand\Text[1][1]{Ein ganz langer sinnloser Satz (#1)!}
+\newcommand{\Lorem}{Lorem ipsum dolor sit amet, consectetur adipiscing elit. In varius urna felis. Donec sem justo, ornare at tristique et, dapibus at elit. Aenean fermentum dapibus porttitor. Ut eu leo tincidunt mauris sollicitudin molestie. Fusce sit amet felis metus. Duis commodo porta mi non vehicula. Fusce sit amet eros ante, quis.}
+
+\begin{document}
+\AtBeginSection{% This will post whatever is inside at the beginning of each section
+	\begin{frame}<beamer>{Gliederung}%nur für beamer, nicht für handout
+	\tableofcontents[currentsection]
+	\end{frame}
+}
+
+\begin{frame}{}{}% Beginn der Titelfolie
+\maketitle
+\end{frame}% Ende der Titelfolie
+
+\section*{Gliederung}
+\begin{frame}<beamer>{Gliederung}
+\tableofcontents
+\end{frame}
+
+\section{Teil 1}
+\begin{frame}{Textboxen}
+\Lorem
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+	\item $\sum\frac{2^x}{\tan 5}$
+	\item teil 2
+	\item teil 3
+\end{itemize}
+\end{frame}
+
+\section{Teil 2}
+\begin{frame}{Textboxen}
+\begin{itemize}
+	\item hallo
+	\note<1-2>{Testnotiz, nichts besonderes}
+	\item du
+	\item arsch
+\end{itemize}
+
+\end{frame}
+
+
+%\subsection{noch mehr Text}
+%\begin{frame}{Titel}{Untertitel} %allgemeine Folie
+%	mehr text
+%\end{frame}
+
+\end{document}
