@@ -21,8 +21,12 @@
 %\usetheme{Boadilla} %nur footer, der aber gut
 %\usetheme{CambridgeUS} %←←←←←schick
 %\usetheme{Madrid}
-
+\usetheme{Copenhagen}
 %\usetheme{Goettingen}
+
+%\usecolortheme{dove}
+%\useinnertheme{circles}
+%\useoutertheme{sidebar}
 
 %\usecolortheme{}
 %\useinnertheme{}
@@ -43,14 +47,7 @@
 %show note-slides
 \setbeameroption{show notes}
 
-%\usetheme{Antibes}
-\usecolortheme{dove}
-%\useinnertheme{circles}
-\useoutertheme{sidebar}
-
-
 \begin{document}
-
 %colors for definition boxes
 \setbeamercolor{defHeader}{fg=black,bg=red!80}
 \setbeamercolor{defBody}{fg=blue,bg=red!40}
@@ -118,15 +115,15 @@
 \tableofcontents
 \end{frame}
 
-\section{Embedded Systems}
+\section{Embedded Systems Design}
 \begin{frame}{Problems}
 	\begin{itemize}
 		\item deadlines
-		\note<.>{\textbf{deadlines:}\\ hard systems: deadline not met, failure\\ soft system: deadline not met, bad results}
+		\note<.>{\textbf{deadlines:} every process has deadline until result must exist \\ hard systems: deadline not met, failure\\ soft system: deadline not met, bad results}
 		\item environment
-		\note<.>{\textbf{environment:}\\ is unpredictable \\ embS $\Rightarrow$ concurrent}
+		\note<.>{\textbf{environment:}\\ is unpredictable \\ embedded Software $\Rightarrow$ must be concurrent}
 		\item continuosity
-		\note<.>{\textbf{continuosity:}\\ embS $\Rightarrow$ does not normaly terminate \\ software has to be reliable \\ update while operating}
+		\note<.>{\textbf{continuosity:}\\ embedded Software $\Rightarrow$ does not normaly terminate \\ software has to be reliable \\ may need update while operating}
 		\item direct hardware interaction
 		\note<.>{\textbf{direct hardware interaction:}\\ uncommon hardware (i.e. detonator in airbag) \\ speed issues (hardware is faster)}
 		\item safety \& reliability
@@ -134,13 +131,10 @@
 	\end{itemize}
 \end{frame}
 
-\section{Embedded Systems design}
-\begin{frame}{Things to consider}
+\begin{frame}{Embedded Systems Design - I}
 	\begin{itemize}
-		\item design and performance of system hardware
-		\note<.>{\textbf{design and performance of system hardware:}\\What hardware to use? \\ What is to be implemented in software, what in hardware}
-		\item power consumption
-		\note<.>{\textbf{power consumption:}\\ especially in mobile products (cells phones etc)}
+		\item Plattform selection
+		\note<.>{\textbf{Plattform selection:}\\ what hardware? \\ Real-time operating system {\tiny (later)}\\ What is to be implemented in software, what in hardware \\ need to design special hardware? \\ power consumption (mobile device, backup)}
 		\item special purpose hardware
 		\note<.>{\textbf{special purpose hardware:}\\ do we need special hardware? \\ design special hardware? \\ replace software by hardware?}
 		\item stimuli:
@@ -150,7 +144,7 @@
 				\note<.>{\textbf{periodic stimuli:}\\occur at predictable intervalls \\ predefined reaction per stimulus \\ i.e. polling}
 				\item aperiodic stimuli
 				\note<.>{\textbf{aperiodic stimuli:}\\ occurr irreagularly and unpredictably \\ often interrupts \\ i.e. alarms, failures, IO operation finished, etc}
-				\note<.>{\textbf{stimuli list:}\\best practice: stimuli list with \textbf{all} stimuli. \\ example next slide}
+				\note<.>{\textbf{stimuli list:}\\best practice: stimuli list with \textbf{all} stimuli. \\ \vspace*{2em} example next slide}
 			\end{enumerate}
 	\end{itemize}
 \end{frame}
@@ -163,13 +157,49 @@
 %	\rowcolors{1}{black!20}{black!40}
 	\begin{tabular}{p{9em}p{13em}}
 		\rowcolor{blue}\hline \textcolor{white}{Stimulus} & \textcolor{white}{Response} \\
-		\pause single sensor positive & \pause flash warning light around sensor \\
-		\pause both sensors in one area positive & \pause flash danger light, sound accoustic alarm \\
+		\pause single sensor positive & \pause flash yellow light around sensor \\
+		\pause both sensors in one area positive & \pause flash red light around sensor, sound accoustic alarm around sensor\\
 		\pause Voltage drop of 10-20\% & \pause switch to backup power; run power supply test \\
 		\pause Voltage drop of more than 20\% & \pause switch to backup; run power supply test; call maintainer \\
 %		\pause Panic button positive & \pause Initiate alarm; turn on lights around button; call police \\
 	\end{tabular} \pause
 \end{frame}
+
+\begin{frame}{Embedded Systems Design - II}
+	\begin{itemize}
+		\item Timing analysis
+		\note<.>{\textbf{Timing analysis:}\\ For each stimulus and response $\Rightarrow$ find timing contraints \\ timing constraints $\Rightarrow$ deadlines}
+		\item Process design
+		\note<.>{\textbf{Process design:}\\ aggregate the stimuli \& responses into concurrent processes \\
+		See Architectural design}
+		\item Algorithm design
+		\note<.>{\textbf{Algorithm design:}\\ For each stimulus \& response $\Rightarrow$ design algorithm \\ especially important for computationally intensive tasks (signal processing) \\ Do we need to implement these in hardware?}
+		\item Data design
+		\note<.>{\textbf{Data design:}\\ How to store data, that will be exchanged \\ semaphore \& critical regions \& monitors \& \dots}
+		\item Process scheduling
+		\note<.>{\textbf{Process scheduling:}\\ ensure, that processes meet their deadline \\ probably among the hardest (own oppionion) \\}
+		\note<.>{\textbf{all shown:}\\ not all need to be done, but most probably will \\ which \& order depends on what we design \\ \textbf{circular buffer:} producer \& consumer may run at different speeds}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Embedded Systems Design - III}
+	\begin{itemize}
+		\onslide<1> \item Plattform selection
+		\onslide<1> \item special purpose hardware
+		\onslide<1> \item stimuli:
+	%		\begin{enumerate}
+	%			\item periodic stimuli
+	%			\item aperiodic stimuli
+	%		\end{enumerate}
+	%	\item Timing analysis
+	%	\item Process design
+	%	\item Algorithm design
+	%	\item Data design
+	%	\item Process scheduling
+		\note<.>{\textbf{all shown:}\\ not all need to be done, but most probably will \\ which \& order depends on what we design \\ \textbf{circular buffer:} producer \& consumer may run at different speeds}
+	\end{itemize}
+\end{frame}
+
 
 \section{Architectural design}
 
