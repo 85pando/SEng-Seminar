@@ -1,6 +1,7 @@
 \documentclass[ngerman={babel}, utf8, bigger, xcolor={table,dvipsnames}, ompress, hyperref={bookmarks,colorlinks}]{beamer}
 
 \usepackage{tikz}
+\usetikzlibrary{positioning}
 
 \title[Embedded Systems]{Software Engineering in Embedded Systems}
 \author{Stephan Heidinger}
@@ -50,8 +51,11 @@
 
 \begin{document}
 
+%colors for definition boxes
 \setbeamercolor{defHeader}{fg=black,bg=red!80}
 \setbeamercolor{defBody}{fg=blue,bg=red!40}
+%colors for tables
+\rowcolors{1}{black!20}{black!40}
 
 %\AtBeginSection{% This will post whatever is inside at the beginning of each section, maybe use sidebar instead
 %	\begin{frame}<beamer>{Gliederung}%nur für beamer, nicht für handout
@@ -151,21 +155,19 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Example: burglar alarm}
-	\centering{\begin{tikzpicture}
-		\draw (0,0) rectangle (10,6);
-	\end{tikzpicture}}
+\begin{frame}{Example: radiation warning system}
+	\input{rad-warner.tex}
 \end{frame}
 
-\begin{frame}{Example: Stimuli-List of a burglar alarm}
-	\rowcolors{1}{black!20}{black!40}
+\begin{frame}{Example: Stimuli-List of a radiation warning system}
+%	\rowcolors{1}{black!20}{black!40}
 	\begin{tabular}{p{9em}p{13em}}
-		\rowcolor{blue!70}\hline Stimulus & Response \\ \pause
-		single sensor positive & \pause Initiate alarm; turn on lights around sensor \\ \pause
-		Two or more sensors positive & \pause Initiate alarm; turn on lights around sensors; call police \\ \pause
-		oltage drop of 10-20\% & \pause switch to backup; run power supply test \\ \pause
-%		Voltage drop of more than 20\% & \pause switch to backup; run power supply test; call police \\ \pause
-		Panic button positive & \pause Initiate alarm; turn on lights around button; call police \\
+		\rowcolor{blue}\hline \textcolor{white}{Stimulus} & \textcolor{white}{Response} \\
+		\pause single sensor positive & \pause flash warning light around sensor \\
+		\pause both sensors in one area positive & \pause flash danger light, sound accoustic alarm \\
+		\pause Voltage drop of 10-20\% & \pause switch to backup power; run power supply test \\
+		\pause Voltage drop of more than 20\% & \pause switch to backup; run power supply test; call maintainer \\
+%		\pause Panic button positive & \pause Initiate alarm; turn on lights around button; call police \\
 	\end{tabular} \pause
 \end{frame}
 
