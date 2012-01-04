@@ -18,8 +18,8 @@
 \usetheme{AnnArbor}
 \useoutertheme{sidebar} %logo einbauen
 %\useinnertheme{circles}
-\usecolortheme{albatross}	%nice dark (blue) %not feasible with notes
-%\usecolortheme{dolphin}	%nice blue around, light inside
+%\usecolortheme{albatross}	%nice dark (blue) %not feasible with notes
+\usecolortheme{dolphin}	%nice blue around, light inside
 %\usecolortheme{beetle}	%nice, dark around, almost light inside
 
 %\usecolortheme{}
@@ -94,14 +94,15 @@
 \begin{frame}{Motivation}
 	\begin{itemize}
 		\item We see:
-		\begin{itemize}%[<+->]
+		\begin{itemize}
 			\item Embedded Systems are everywhere!
 			\item There are probably more Embedded Systems than computers out there!
 		\end{itemize}
 		\item We realize:
-		\begin{itemize}%[<+->]
+		\begin{itemize}
 			\item Man, they must be important.
-			\item There sure is some money in this. %c-programming, special skills
+			\item There sure is some money in this.
+			\note<.>{\textbf{some money:}\\ C-programing \\ special skills}
 			\only<7>{\item I did an internship producing an embedded system.}
 		\end{itemize}
 		\end{itemize}
@@ -128,7 +129,6 @@
 			\note<.>{\textbf{direct hardware interaction:}\\ uncommon hardware (i.e. detonator in airbag) \\ speed issues (hardware is faster)}
 			\item safety \& reliability
 			\note<.>{\textbf{safety \& reliability:}\\ cost of failure high \\ either economical or in human life}
-			\note<.>{\\ \vspace{2em}\textbf{next thing:}\\Design steps \\ not all are necessary, but most will be.}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -136,6 +136,7 @@
 \begin{frame}{Embedded Systems Design - I}
 	\begin{itemize}
 		\item design steps
+		\note<.>{\textbf{next thing:}\\ not all are necessary, but most will be.}
 		\begin{itemize}
 			\item platform selection
 			\note<.>{\textbf{Platform selection:}\\ what hardware? \\ Real-time operating system {\tiny (later)}\\ What is to be implemented in software, what in hardware \\ need to design special hardware? \\ power consumption (mobile device, backup)}
@@ -156,6 +157,7 @@
 
 \begin{frame}{Example: radiation warning system}
 	\input{rad-warner.tex}
+	\note<.>{\textbf{TODO:}\\ input some comments}
 \end{frame}
 
 \begin{frame}{Example: Stimuli-List of a radiation warning system}
@@ -167,6 +169,7 @@
 		Voltage drop of 10-20\% & switch to backup power; run power supply test \pause \\
 		Voltage drop of more than 20\% & switch to backup; run power supply test; call maintainer \\
 	\end{tabular}
+	\note<.>{\textbf{LAST CELL:}\\}
 	\setbeamercovered{transparent=25}
 \end{frame}
 
@@ -319,6 +322,7 @@
 		turn on light & 500ms \pause \\
 		call maintainer & 5000ms \\
 	\end{tabular}
+	\note<.>{\textbf{LAST CELL:}\\}
 \setbeamercovered{transparent=25}
 \end{frame}
 
@@ -346,7 +350,7 @@
 
 \begin{frame}{30 minutes in short}
 	\begin{itemize}
-		\item What you should (at least)remember:
+		\item What you should (at least) remember:
 		\begin{itemize}
 			\item Embedded Systems react to events in real time.
 			\item Embedded Systems are a set of processes reating to stimuli
