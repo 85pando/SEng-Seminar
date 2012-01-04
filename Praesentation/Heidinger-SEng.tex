@@ -1,42 +1,31 @@
 \documentclass[ngerman={babel}, utf8, bigger, xcolor={table,dvipsnames}, ompress, hyperref={bookmarks,colorlinks}]{beamer}
 
-\usepackage{tikz}
-\usetikzlibrary{positioning}
+\usepackage{pgfpages} %used for pdfpres two-window output
+
+\usepackage{tikz}	%graphics
+\usetikzlibrary{positioning}	%easier positioning
+\usepackage{tikz-uml}	%UML diagrams
 
 \title[Embedded Systems]{Software Engineering in Embedded Systems}
 \author{Stephan Heidinger}
-\date{Datum} %hier Datum des Vortrags einfügen
+\date{19. January 2012} %hier Datum des Vortrags einfügen
 \institute[Seng-Seminar]{Seminar: Software Engineering \\ Fachbereich für Informatik und Informationssysteme \\ Universtität Konstanz}
 %\setbeameroption{}
 %\setbeamerfont{}{}
 %\setbeamercolor{}{}
 %\setbeamertemplate{}{}
 
-%\usetheme{AnnArbor} %mit farbanpassung evtl
-%\usetheme{Antibes}
-%\usetheme{Berkeley} %mit sidebar, aber wenig struktur
-%\usetheme{Hannover} %wie berkeley, aber weniger zeug
-%\usetheme{Marburg} %pornosidebar
-%\usetheme{Berlin} %"history" im header
-%\usetheme{Boadilla} %nur footer, der aber gut
-%\usetheme{CambridgeUS} %←←←←←schick
-%\usetheme{Madrid}
-\usetheme{Copenhagen}
-%\usetheme{Goettingen}
-
-%\usecolortheme{dove}
+\usetheme{AnnArbor}
+\useoutertheme{sidebar} %logo einbauen
 %\useinnertheme{circles}
-%\useoutertheme{sidebar}
+\usecolortheme{albatross}	%nice dark (blue) %not feasible with notes
+%\usecolortheme{dolphin}	%nice blue around, light inside
+%\usecolortheme{beetle}	%nice, dark around, almost light inside
 
 %\usecolortheme{}
 %\useinnertheme{}
 %\useoutertheme{}
 %\usefontheme{}
-
-%setze normale navileiste auf null
-%\setbeamertemplate{footline}{} \setbeamertemplate{navigation symbols}{}
-%füge neue Navigationsleiste in die sidebar ein, die nur overlay und frame hat
-%\setbeamertemplate{sidebar left}{\vspace*{\fill} \scalebox{1}[2]{\insertslidenavigationsymbol} \scalebox{1}[2]{\insertframenavigationsymbol}}
 
 %standardoverlayreihenfolge: aktuelles overlay und auf allen danach
 \beamerdefaultoverlayspecification{<+->}
@@ -46,6 +35,8 @@
 \setbeamercovered{transparent=25}
 %show note-slides
 \setbeameroption{show notes}
+%\setbeameroption{show notes on second screen=right} %use impressive, both monitors same resolution...
+\setbeameroption{show notes on second screen=left} %use impressive, both monitors same resolution...
 
 \begin{document}
 %colors for definition boxes
@@ -54,98 +45,112 @@
 %colors for tables
 \rowcolors{1}{black!20}{black!40}
 
-%\AtBeginSection{% This will post whatever is inside at the beginning of each section, maybe use sidebar instead
-%	\begin{frame}<beamer>{Gliederung}%nur für beamer, nicht für handout
-%	\tableofcontents[currentsection]
-%	\end{frame}
-%}
+\AtBeginSection{% This will post whatever is inside at the beginning of each section, maybe use sidebar instead
+	\begin{frame}<beamer>{Outline}%nur für beamer, nicht für handout
+	\addtocounter{framenumber}{-1}
+	\tableofcontents[currentsection]
+	\end{frame}
+}
 
 \begin{frame}{}{}% Beginn der Titelfolie
 \maketitle
 \end{frame}% Ende der Titelfolie
 
-
-
-\section{Motivation}
+%\section{Motivation}
 \begin{frame}{Embedded Systems - What's that? - I}
 	\begin{beamerboxesrounded}[upper=defHeader, lower=defBody,shadow=true]{Definition}
 	\emph{``An \textbf{embedded software} system is part of a hardware/software system that reacts to events in its environment. The software is `embedded' in the hardware. Embedded systems are nominaly real-time systems.''\\
-		{\tiny Software Engineering, p.561, Edited by Ian Sommerville, Ninth Edition}}
+		{\tiny Software Engineering, p.561, Edited by Ian Sommerville, Ninth Edition}} %bibliography
 	\end{beamerboxesrounded}
 \end{frame}
 
 \begin{frame}{Embedded Systems - What's that? - II}
-	Embedded Systems \dots
 	\begin{itemize}
-		\item \dots respond to physical world
-		\item \dots respond in real time (``have a \emph{deadline}'')%time in which the result is produced
-		\item \dots often have little resources %(i.e. not `computers')
-		\item \dots run on special purpose hardware
-		\item \dots run in real-time operating system
+		\item Embedded Systems: \dots
+		\begin{itemize}
+			\item \dots respond to physical world
+			\item \dots respond in real time (``have a \emph{deadline}'')%time in which the result is produced
+			\item \dots often have little resources %(i.e. not `computers')
+			\item \dots run on special purpose hardware
+			\item \dots run in real-time operating system
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Embedded Systems - What's that? - III}
-	Examples for Embedded Systems:
 	\begin{itemize}
-		\item airbag
-		\item cell phone / `modern' phone
-		\item burglar alarm
-		\item (fully automatic) coffee machine
-		\item danger detection %(NPP, earthquake, \dots)
-		\item \dots
+		\item Examples for Embedded Systems:
+		\begin{itemize}
+			\item airbag
+			\item cell phone / `modern' phone
+			\item burglar alarm
+			\item (fully automatic) coffee machine
+			\item danger detection %(NPP, earthquake, \dots)
+			\item \dots
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Motivation}
-	\onslide<+->{We see:}
-	\begin{itemize}%[<+->]
-		\item Embedded Systems are everywhere!
-		\item There are probably more Embedded Systems than computers out there!
-	\end{itemize}
-	\onslide<+->{We realize:}
-	\begin{itemize}%[<+->]
-		\item Man, they must be important.
-		\item There sure is some money in this. %c-programming, special skills
-	\end{itemize}
+	\begin{itemize}
+		\item We see:
+		\begin{itemize}%[<+->]
+			\item Embedded Systems are everywhere!
+			\item There are probably more Embedded Systems than computers out there!
+		\end{itemize}
+		\item We realize:
+		\begin{itemize}%[<+->]
+			\item Man, they must be important.
+			\item There sure is some money in this. %c-programming, special skills
+			\only<7>{\item I did an internship producing an embedded system.}
+		\end{itemize}
+		\end{itemize}
 \end{frame}
 
 %\section*{Outline}
 \begin{frame}<beamer>{Outline}
+\addtocounter{framenumber}{-1}
 \tableofcontents
 \end{frame}
 
 \section{Embedded Systems Design}
 \begin{frame}{Problems}
 	\begin{itemize}
-		\item deadlines
-		\note<.>{\textbf{deadlines:} every process has deadline until result must exist \\ hard systems: deadline not met, failure\\ soft system: deadline not met, bad results}
-		\item environment
-		\note<.>{\textbf{environment:}\\ is unpredictable \\ embedded Software $\Rightarrow$ must be concurrent}
-		\item continuosity
-		\note<.>{\textbf{continuosity:}\\ embedded Software $\Rightarrow$ does not normaly terminate \\ software has to be reliable \\ may need update while operating}
-		\item direct hardware interaction
-		\note<.>{\textbf{direct hardware interaction:}\\ uncommon hardware (i.e. detonator in airbag) \\ speed issues (hardware is faster)}
-		\item safety \& reliability
-		\note<.>{\textbf{safety \& reliability:}\\ cost of failure high \\ either economical or in human life}
+		\item Problems in embedded Systems:
+		\begin{itemize}
+			\item deadlines
+			\note<.>{\textbf{deadlines:} every process has deadline until result must exist \\ hard systems: deadline not met, failure\\ soft system: deadline not met, bad results}
+			\item environment
+			\note<.>{\textbf{environment:}\\ is unpredictable \\ embedded Software $\Rightarrow$ must be concurrent}
+			\item continuity
+			\note<.>{\textbf{continuity:}\\ embedded Software $\Rightarrow$ does not normally terminate \\ software has to be reliable \\ may need update while operating}
+			\item direct hardware interaction
+			\note<.>{\textbf{direct hardware interaction:}\\ uncommon hardware (i.e. detonator in airbag) \\ speed issues (hardware is faster)}
+			\item safety \& reliability
+			\note<.>{\textbf{safety \& reliability:}\\ cost of failure high \\ either economical or in human life}
+			\note<.>{\\ \vspace{2em}\textbf{next thing:}\\Design steps \\ not all are necessary, but most will be.}
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Embedded Systems Design - I}
 	\begin{itemize}
-		\item Plattform selection
-		\note<.>{\textbf{Plattform selection:}\\ what hardware? \\ Real-time operating system {\tiny (later)}\\ What is to be implemented in software, what in hardware \\ need to design special hardware? \\ power consumption (mobile device, backup)}
-		\item special purpose hardware
-		\note<.>{\textbf{special purpose hardware:}\\ do we need special hardware? \\ design special hardware? \\ replace software by hardware?}
-		\item stimuli:
-		\note<.>{\textbf{stimuli:}\\ describe behaviour of system by listing received stimuli and reactions \\ stimuli = signals \\}
-			\begin{enumerate}
-				\item periodic stimuli
-				\note<.>{\textbf{periodic stimuli:}\\occur at predictable intervalls \\ predefined reaction per stimulus \\ i.e. polling}
-				\item aperiodic stimuli
-				\note<.>{\textbf{aperiodic stimuli:}\\ occurr irreagularly and unpredictably \\ often interrupts \\ i.e. alarms, failures, IO operation finished, etc}
-				\note<.>{\textbf{stimuli list:}\\best practice: stimuli list with \textbf{all} stimuli. \\ \vspace*{2em} example next slide}
-			\end{enumerate}
+		\item design steps
+		\begin{itemize}
+			\item platform selection
+			\note<.>{\textbf{Platform selection:}\\ what hardware? \\ Real-time operating system {\tiny (later)}\\ What is to be implemented in software, what in hardware \\ need to design special hardware? \\ power consumption (mobile device, backup)}
+			\item special purpose hardware
+			\note<.>{\textbf{special purpose hardware:}\\ do we need special hardware? \\ design special hardware? \\ replace software by hardware?}
+			\item stimuli:
+			\note<.>{\textbf{stimuli:}\\ describe behavior of system by listing received stimuli and reactions \\ stimuli = signals \\}
+				\begin{enumerate}
+					\item periodic stimuli
+					\note<.>{\textbf{periodic stimuli:}\\occur at predictable intervals \\ predefined reaction per stimulus \\ i.e. polling}
+					\item aperiodic stimuli
+					\note<.>{\textbf{aperiodic stimuli:}\\ occurr irregularly and unpredictably \\ often interrupts \\ i.e. alarms, failures, IO operation finished, etc}
+					\note<.>{\textbf{stimuli list:}\\best practice: stimuli list with \textbf{all} stimuli. \\ \vspace*{2em} example next slide}
+				\end{enumerate}
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
@@ -154,67 +159,202 @@
 \end{frame}
 
 \begin{frame}{Example: Stimuli-List of a radiation warning system}
-%	\rowcolors{1}{black!20}{black!40}
+	\setbeamercovered{invisible}
 	\begin{tabular}{p{9em}p{13em}}
-		\rowcolor{blue}\hline \textcolor{white}{Stimulus} & \textcolor{white}{Response} \\
-		\pause single sensor positive & \pause flash yellow light around sensor \\
-		\pause both sensors in one area positive & \pause flash red light around sensor, sound accoustic alarm around sensor\\
-		\pause Voltage drop of 10-20\% & \pause switch to backup power; run power supply test \\
-		\pause Voltage drop of more than 20\% & \pause switch to backup; run power supply test; call maintainer \\
-%		\pause Panic button positive & \pause Initiate alarm; turn on lights around button; call police \\
-	\end{tabular} \pause
+		\rowcolor{blue}\hline \textcolor{white}{Stimulus} & \textcolor{white}{Response} \pause \\
+		single sensor positive & flash yellow light around sensor \pause \\
+		both sensors in one area positive & flash red light around sensor, sound acoustic alarm around sensor \pause \\
+		Voltage drop of 10-20\% & switch to backup power; run power supply test \pause \\
+		Voltage drop of more than 20\% & switch to backup; run power supply test; call maintainer \\
+	\end{tabular}
+	\setbeamercovered{transparent=25}
 \end{frame}
 
 \begin{frame}{Embedded Systems Design - II}
 	\begin{itemize}
-		\item Timing analysis
-		\note<.>{\textbf{Timing analysis:}\\ For each stimulus and response $\Rightarrow$ find timing contraints \\ timing constraints $\Rightarrow$ deadlines}
-		\item Process design
-		\note<.>{\textbf{Process design:}\\ aggregate the stimuli \& responses into concurrent processes \\
-		See Architectural design}
-		\item Algorithm design
-		\note<.>{\textbf{Algorithm design:}\\ For each stimulus \& response $\Rightarrow$ design algorithm \\ especially important for computationally intensive tasks (signal processing) \\ Do we need to implement these in hardware?}
-		\item Data design
-		\note<.>{\textbf{Data design:}\\ How to store data, that will be exchanged \\ semaphore \& critical regions \& monitors \& \dots}
-		\item Process scheduling
-		\note<.>{\textbf{Process scheduling:}\\ ensure, that processes meet their deadline \\ probably among the hardest (own oppionion) \\}
-		\note<.>{\textbf{all shown:}\\ not all need to be done, but most probably will \\ which \& order depends on what we design \\ \textbf{circular buffer:} producer \& consumer may run at different speeds}
+		\item design steps - continued
+		\begin{itemize}
+			\item Timing analysis
+			\note<.>{\textbf{Timing analysis:}\\ For each stimulus and response $\Rightarrow$ find timing constraints \\ timing constraints $\Rightarrow$ deadlines}
+			\item Process design
+			\note<.>{\textbf{Process design:}\\ aggregate the stimuli \& responses into concurrent processes \\
+			See Architectural design}
+			\item Algorithm design
+			\note<.>{\textbf{Algorithm design:}\\ For each stimulus \& response $\Rightarrow$ design algorithm \\ especially important for computationally intensive tasks (signal processing) \\ Do we need to implement these in hardware?}
+			\item Data design
+			\note<.>{\textbf{Data design:}\\ How to store data, that will be exchanged \\ semaphore \& critical regions \& monitors \& \dots}
+			\note<.>{\\ \textbf{circular buffer:} producer \& consumer may run at different speeds}
+			\item Process scheduling
+			\note<.>{\textbf{Process scheduling:}\\ ensure, that processes meet their deadline \\ probably among the hardest (own opionion)}
+			\note<.>{\ \\ \textbf{all shown:}\\ not all need to be done, but most probably will \\ which \& order depends on what we design }
+			\note<.>{\\ \ \\ \textbf{after this design steps:}\\ make sure system can meet deadlines \\ static analysis \\ simulation
+			}
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Embedded Systems Design - III}
+\begin{frame}{Embedded system modeling}
 	\begin{itemize}
-		\onslide<1> \item Plattform selection
-		\onslide<1> \item special purpose hardware
-		\onslide<1> \item stimuli:
-	%		\begin{enumerate}
-	%			\item periodic stimuli
-	%			\item aperiodic stimuli
-	%		\end{enumerate}
-	%	\item Timing analysis
-	%	\item Process design
-	%	\item Algorithm design
-	%	\item Data design
-	%	\item Process scheduling
-		\note<.>{\textbf{all shown:}\\ not all need to be done, but most probably will \\ which \& order depends on what we design \\ \textbf{circular buffer:} producer \& consumer may run at different speeds}
+		\item Embedded Systems are often built as state machines.
+		\begin{description}
+			\item[ $\Rightarrow$] UML state diagrams
+		\end{description}
+		%\input{rad-warner-state.tex}
+		\hspace{-1em}\includegraphics[scale=.6]{rad-warner-state.png}
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{Embedded software programing}
+	\begin{itemize}
+		\item programm has to be\dots
+			\begin{itemize}
+				\item \dots fast (i.e. C, Asssembler)
+				\note<.>{\textbf{C, Assembler:}\\ No concurrency \\ no built-in system for shared resources}
+				\item \dots concurrent (i.e. C++, real time Java, \dots){}
+				\note<.>{\textbf{concurrent:}\\ and manage shared resources}
+			\end{itemize}
+			\note<.>{\\ \ \\ \textbf{concurrent or speed??:}\\ depends on what is more important \\ simulate concurrency with frequent polling \\ do something yourself about shared resources}
+			\item speed looses importance
+			\note<.>{\textbf{speed:}\\ due to faster hardware \\ ie monitoring device written in C++ \\ ie cell phones in java, objective C, \dots}
+	\end{itemize}
+\end{frame}
 
-\section{Architectural design}
+\section{Architectural patterns}
+\begin{frame}{Architectural patterns}
+	\begin{itemize}
+		\item Architectural patterns are used to describe a system in an abstract way and help to understand the architecture.
+		\note<.>{\textbf{note on 3:}\\ The source described three rough design pattern \\ there are finer patterns}
+		\begin{itemize}
+			\item Observe and react
+			\note<.>{\textbf{Observe and React:}\\ set of monitored sensors \\ Something happens $Rightarrow$ we do something \\ ie incoming phone call}
+			\item Environmental Control
+			\note<.>{\textbf{Environmental Control:}\\ set of sensors and actuators \\ can change environment \\ ie flash light, when sensor fires}
+			\item Process Pipeline
+			\note<.>{\textbf{Process Pipeline:}\\ data transformation \\ series of processing steps\\ preferably concurrent}
+		\end{itemize}
+		\note<.>{\\ \textbf{all of those:} can be combined \\ often more than one pattern in the system \\ ie monitor the actuators}
+		\note<.>{\ \textbf{design patterns:} will lead to inefficient system $Rightarrow$ only for understanding system}
+		\end{itemize}
+\end{frame}
+
+\begin{frame}{Observe and React}
+	\begin{itemize}
+		\item Observe and React
+		\begin{itemize}
+			\item monitor the system with a set of sensors
+			\note<.>{\textbf{monitoring:}\\ as stated before}
+			\item display something
+			\note<.>{\textbf{display:}\\ monitoring screen \\ on exceptional behaviour: alarms, shutdown\\ }
+			\item primarly used in: Monitoring systems
+			\note<.>{\textbf{monitoring systems:}\\ often consist of more than one O\&R patterns, one for each sensor \\ optimisation: combine something, ie display on one monitor}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Environmental Control}
+	\begin{itemize}
+		\item Environmental Control
+		\begin{itemize}
+			\item monitor the system and react to any changes
+			\item Used when there is no requirement for user interaction\dots{}
+			\note<.>{\textbf{examples:}\\ cruise control \\ water level \\ pressure control \\ \dots }
+			\item \dots or no time for the user to interact \dots
+			\note<.>{\textbf{examples:}\\ break assist \\ airbag}
+			\item \dots no way a user can interact \dots{}
+			\note<.>{\textbf{example:}\\ CYPRES {\tiny (parachute, Möllemann did not activate his in 2003)} \\ self desctruct of military/sensitive equipment}
+			\item \dots or there is too much information for users to process.
+			\note<.>{\textbf{example:}\\ Nuclear Power Plant \\ Airplane \\ Car \\ virtually any big system with many subsystems}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Process Pipeline}
+	\begin{itemize}
+		\item Process Pipeline
+		\begin{itemize}
+			\item transform data
+			\note<.>{\textbf{examples:}\\ signal processing from sensors in other systems \\ optical sensor \\ convert digital data to audio}
+			\item often huge amounts of data to be converted in real time
+			\note<.>{\textbf{huge amount:}\\ concurrency + multicore is the key}
+			\item data aquisition system: storing of data may need to be fast
+			\note<.>{\textbf{example:}\\ particle accelerator \\ chemical reactions \\ \dots \\ if storing not fast, data will be lost}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
 
 \section{Timing analysis}
-
-\section{Real-time operating systems}
-
-
-\begin{frame}{Last Slide}
-	\vspace*{4em}{\huge Last Slide}
+\begin{frame}{Timing Analysis - I}
+	\begin{itemize}
+		\item timing analysis
+		\begin{itemize}
+			\item Correctness of systems depends not only on result, but also on the time at which the result is produced.
+			\item How often does each process need to be executed?
+			\note<.>{\textbf{how often?:}\\ then we check, if our system can deliver this \\ this can be quite hard, when \emph{mixture of aperiodic and periodic stimuli} or \emph{many aperiodic stimuli} are expected}
+			\item aperiodic stimuly $\Rightarrow$ make assumptions
+			\note<.>{\textbf{fast systems:}\\ use only periodic stimuli \\ poll frequently for aperiodic stimuli}
+		\end{itemize}
+	\end{itemize}
 \end{frame}
 
-%\subsection{noch mehr Text}
-%\begin{frame}{Titel}{Untertitel} %allgemeine Folie
-%	mehr text
-%\end{frame}
+\begin{frame}{Timing Analysis - II}
+	\begin{itemize}
+		\item Consider:
+		\begin{itemize}
+			\item deadlines
+			\note<.>{\textbf{deadlines:}\\ By which time must the process have ended.}
+			\item frequency
+			\note<.>{\textbf{frequency:}\\ The number of times a process must be executed in a given span, so that the \emph{system} meets all deadlines}
+			\item execution time
+			\note<.>{\textbf{execution time:}\\ How long does each single process take (average \& worst case) \\ hard: conditional execution, delays waiting, \dots \\ \textbf{hard systems:} always worst case}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\setbeamercovered{invisible}
+	\begin{tabular}{p{9em}p{13em}}
+		\rowcolor{blue}\hline \textcolor{white}{Stimulus/Response} & \textcolor{white}{Timing requirements} \\
+		voltage drop & switch to backup: 50ms \pause \\
+		each sensor & poll twice a second \pause \\
+		turn on light & 500ms \pause \\
+		call maintainer & 5000ms \\
+	\end{tabular}
+\setbeamercovered{transparent=25}
+\end{frame}
+
+\section{Real-time operating systems}
+\begin{frame}{Real-time operating systems}
+	\begin{itemize}
+		\item nromal operating systems not feasible
+		\note<.>{\textbf{normal operating systems:}\\ too large, too bulky, too slow}
+		\item special ``real-time operating systems'' exist
+		\note<.>{\textbf{real-time operating systems:}\\Windows/CE \\ Vxworks \\ RTLinux \\ emdebian\\ \ \\ they are small and damn fast}
+		\item RTOS must include:
+		\begin{itemize}
+			\item real-time clock
+			\note<.>{\textbf{real-time clock:}\\ provides information required to schedule processes}
+			\item interrupt handler
+			\note<.>{\textbf{interrupt handler:}\\ manages aperiodic requests for service \\ may be inside process manager \\ at least \textbf{2 levels:} \\ \emph{interrupt} for processes with fast response time \& \emph {clock level} fore regular processes \\ often also background processes with low priority {\tiny (self checks etc)}}
+			\item process manager: scheduler \& resource manager
+			\note<.>{\textbf{scheduler}\\ examines processes and chooses one for execution \\ processes need enough processor time to \emph{finish before their deadline} \\ \textbf{commonly used:} \\ non-pre-emptive \& pre-emtive (execution of processes may be stopped) \\ \emph{round robin} \\ rate monolithic scheduling (SJF) \\ shortes deadline first (HPF) }
+			\note<.>{\textbf{resource manager:}\\ allocates memory and processor resources scheduled for execution}
+			\item dispatcher
+			\note<.>{\textbf{dispatcher:}\\ starts execution of processes}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{30 minutes in short}
+	\begin{itemize}
+		\item What you should (at least)remember:
+		\begin{itemize}
+			\item Embedded Systems react to events in real time.
+			\item Embedded Systems are a set of processes reating to stimuli
+			\item State models help understanding the System.
+			\item Architectural patterns can be used to help in designing the system.
+			\item Always to timing analysis in (hard) Embedded Systems.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
 
 \end{document}

@@ -1,0 +1,35 @@
+%\usepackage{tikz-uml}
+\begin{tikzpicture}
+
+\umlstateinitial[x=0,y=.28,name=initial]
+
+\begin{umlstate}[x=3,y=0, name=waiting,fill=green!40]{waiting}
+\node (glight) {green light};
+\end{umlstate}
+\umltrans{initial}{waiting}
+
+\begin{umlstate}[x=7,y=2,name=backupPower,fill=yellow!40]{backup power}
+\node (backUpPower) {check power supply};
+\end{umlstate}
+\umlVHtrans[arg=Voltage drop 10-20\%, pos=1.2]{waiting}{backupPower}
+\umlVHtrans[arg=power restored, pos=.5]{backupPower}{waiting}
+
+\begin{umlstate}[x=13,y=2,name=criticalPower,fill=red!40]{critical power}
+\node (criPower) {call maintainer};
+\end{umlstate}
+\umltrans[arg=Voltage drop over 20\%,pos=.5]{backupPower}{criticalPower}
+\umlVHtrans[arg=power restored,pos=.5]{criticalPower}{waiting}
+
+\begin{umlstate}[x=3,y=-3,name=oneAlarm,fill=yellow!40]{one alarm active}
+\node (yellowLight) {yellow Light};
+\end{umlstate}
+\umltrans[arg=one sensor positive]{waiting}{oneAlarm}
+\umlHVHtrans[arg=manual reset,arm1=3cm,pos=1.7]{oneAlarm}{waiting}
+
+\begin{umlstate}[x=9,y=-1.5,name=twoAlarm,fill=red!40]{two alarms active}
+\node (red Light) {red Light + alarm};
+\end{umlstate}
+\umlHVtrans[arg=two sensors positive,pos=1.4]{oneAlarm}{twoAlarm}
+
+\umlVHtrans[arg=manual reset,pos=.5]{twoAlarm}{waiting}
+\end{tikzpicture}
