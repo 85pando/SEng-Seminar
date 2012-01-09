@@ -15,12 +15,19 @@
 %\setbeamercolor{}{}
 %\setbeamertemplate{}{}
 
+
 \usetheme{AnnArbor}
-\useoutertheme{sidebar} %logo einbauen
+%\useoutertheme{sidebar2} %logo einbauen?
+\usepackage{sidebar}
 %\useinnertheme{circles}
 %\usecolortheme{albatross}	%nice dark (blue) %not feasible with notes
 \usecolortheme{dolphin}	%nice blue around, light inside
 %\usecolortheme{beetle}	%nice, dark around, almost light inside
+\pgfdeclareimage[height=1.925cm]{uni-logo}{logo}%[height=0.5cm]{university-logo}{images/uni_logo}
+\logo{\pgfuseimage{uni-logo}}
+\setbeamercolor{structure}{fg=black}%,bg=black!75}
+\setbeamercolor{frametitle}{fg=white}
+%\setbeamercolor{title in sidebar}{fg=yellow,bg=green}
 
 %\usecolortheme{}
 %\useinnertheme{}
@@ -52,9 +59,10 @@
 	\end{frame}
 }
 
-\begin{frame}{}{}% Beginn der Titelfolie
-\maketitle
-\end{frame}% Ende der Titelfolie
+\frame[plain]{\titlepage}
+%\begin{frame}{}{}% Beginn der Titelfolie
+%\maketitle
+%\end{frame}% Ende der Titelfolie
 
 %\section{Motivation}
 \begin{frame}{Embedded Systems - What's that? - I}
@@ -163,13 +171,13 @@
 \begin{frame}{Example: Stimuli-List of a radiation warning system}
 	\setbeamercovered{invisible}
 	\begin{tabular}{p{9em}p{13em}}
-		\rowcolor{blue}\hline \textcolor{white}{Stimulus} & \textcolor{white}{Response} \pause \\
+		\rowcolor{structure.fg}\hline \textcolor{white}{Stimulus} & \textcolor{white}{Response} \pause \\
 		single sensor positive & flash yellow light around sensor \pause \\
 		both sensors in one area positive & flash red light around sensor, sound acoustic alarm around sensor \pause \\
 		Voltage drop of 10-20\% & switch to backup power; run power supply test \pause \\
 		Voltage drop of more than 20\% & switch to backup; run power supply test; call maintainer \\
 	\end{tabular}
-	\note<.>{\textbf{LAST CELL:}\\}
+	\note<5>{\textbf{LAST CELL:}\\}
 	\setbeamercovered{transparent=25}
 \end{frame}
 
@@ -203,8 +211,8 @@
 			\item[ $\Rightarrow$] UML state diagrams
 		\end{description}
 		%\input{rad-warner-state.tex}
-		\hspace{-1em}\includegraphics[scale=.6]{rad-warner-state.png}
 	\end{itemize}
+	 \only<3>{\hspace{-1em}\includegraphics[scale=.6]{rad-warner-state.png}}
 \end{frame}
 
 \begin{frame}{Embedded software programing}
@@ -316,20 +324,20 @@
 \begin{frame}
 \setbeamercovered{invisible}
 	\begin{tabular}{p{9em}p{13em}}
-		\rowcolor{blue}\hline \textcolor{white}{Stimulus/Response} & \textcolor{white}{Timing requirements} \\
+		\rowcolor{structure.fg}\hline \textcolor{white}{Stimulus/Response} & \textcolor{white}{Timing requirements} \\
 		voltage drop & switch to backup: 50ms \pause \\
 		each sensor & poll twice a second \pause \\
 		turn on light & 500ms \pause \\
 		call maintainer & 5000ms \\
 	\end{tabular}
-	\note<.>{\textbf{LAST CELL:}\\}
+	\note<4>{\textbf{LAST CELL:}\\}
 \setbeamercovered{transparent=25}
 \end{frame}
 
 \section{Real-time operating systems}
 \begin{frame}{Real-time operating systems}
 	\begin{itemize}
-		\item nromal operating systems not feasible
+		\item normal operating systems not feasible
 		\note<.>{\textbf{normal operating systems:}\\ too large, too bulky, too slow}
 		\item special ``real-time operating systems'' exist
 		\note<.>{\textbf{real-time operating systems:}\\Windows/CE \\ Vxworks \\ RTLinux \\ emdebian\\ \ \\ they are small and damn fast}
