@@ -1,4 +1,4 @@
-\documentclass[ngerman={babel}, utf8, bigger, xcolor={table,dvipsnames}, ompress, hyperref={bookmarks,colorlinks}]{beamer}
+\documentclass[ngerman={babel}, utf8, bigger, t, xcolor={table,dvipsnames}, ompress, hyperref={bookmarks,colorlinks}]{beamer}
 
 \usepackage{pgfpages} %used for pdfpres two-window output
 
@@ -141,7 +141,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Embedded Systems Design - I}
+\begin{frame}{Embedded Systems Design}
 	\begin{itemize}
 		\item design steps
 		\note<.>{\textbf{next thing:}\\ not all are necessary, but most will be.}
@@ -157,8 +157,23 @@
 					\note<.>{\textbf{periodic stimuli:}\\occur at predictable intervals \\ predefined reaction per stimulus \\ i.e. polling}
 					\item aperiodic stimuli
 					\note<.>{\textbf{aperiodic stimuli:}\\ occurr irregularly and unpredictably \\ often interrupts \\ i.e. alarms, failures, IO operation finished, etc}
-					\note<.>{\textbf{stimuli list:}\\best practice: stimuli list with \textbf{all} stimuli. \\ \vspace*{2em} example next slide}
+					\note<.>{\textbf{stimuli list:}\\best practice: stimuli list with \textbf{all} stimuli. \\ \vspace*{2em} example NEXT SLIDE}
 				\end{enumerate}
+			\item Timing analysis
+			\note<.>{\textbf{Timing analysis:}\\ For each stimulus and response $\Rightarrow$ find timing constraints \\ timing constraints $\Rightarrow$ deadlines}
+			\item Process design
+			\note<.>{\textbf{Process design:}\\ aggregate the stimuli \& responses into concurrent processes \\
+			See Architectural design}
+			\item Algorithm design
+			\note<.>{\textbf{Algorithm design:}\\ For each stimulus \& response $\Rightarrow$ design algorithm \\ especially important for computationally intensive tasks (signal processing) \\ Do we need to implement these in hardware?}
+			\item Data design
+			\note<.>{\textbf{Data design:}\\ How to store data, that will be exchanged \\ semaphore \& critical regions \& monitors \& \dots}
+			\note<.>{\\ \textbf{circular buffer:} producer \& consumer may run at different speeds}
+			\item Process scheduling
+			\note<.>{\textbf{Process scheduling:}\\ ensure, that processes meet their deadline \\ probably among the hardest (own opionion)}
+			\note<.>{\ \\ \textbf{all shown:}\\ not all need to be done, but most probably will \\ which \& order depends on what we design }
+			\note<.>{\\ \ \\ \textbf{after this design steps:}\\ make sure system can meet deadlines \\ static analysis \\ simulation
+			}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -181,28 +196,7 @@
 	\setbeamercovered{transparent=25}
 \end{frame}
 
-\begin{frame}{Embedded Systems Design - II}
-	\begin{itemize}
-		\item design steps - continued
-		\begin{itemize}
-			\item Timing analysis
-			\note<.>{\textbf{Timing analysis:}\\ For each stimulus and response $\Rightarrow$ find timing constraints \\ timing constraints $\Rightarrow$ deadlines}
-			\item Process design
-			\note<.>{\textbf{Process design:}\\ aggregate the stimuli \& responses into concurrent processes \\
-			See Architectural design}
-			\item Algorithm design
-			\note<.>{\textbf{Algorithm design:}\\ For each stimulus \& response $\Rightarrow$ design algorithm \\ especially important for computationally intensive tasks (signal processing) \\ Do we need to implement these in hardware?}
-			\item Data design
-			\note<.>{\textbf{Data design:}\\ How to store data, that will be exchanged \\ semaphore \& critical regions \& monitors \& \dots}
-			\note<.>{\\ \textbf{circular buffer:} producer \& consumer may run at different speeds}
-			\item Process scheduling
-			\note<.>{\textbf{Process scheduling:}\\ ensure, that processes meet their deadline \\ probably among the hardest (own opionion)}
-			\note<.>{\ \\ \textbf{all shown:}\\ not all need to be done, but most probably will \\ which \& order depends on what we design }
-			\note<.>{\\ \ \\ \textbf{after this design steps:}\\ make sure system can meet deadlines \\ static analysis \\ simulation
-			}
-		\end{itemize}
-	\end{itemize}
-\end{frame}
+
 
 \begin{frame}{Embedded system modeling}
 	\begin{itemize}
