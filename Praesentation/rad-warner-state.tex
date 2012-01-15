@@ -15,7 +15,7 @@
 \umlVHtrans[arg=power restored, pos=.5]{backupPower}{waiting}
 
 \begin{umlstate}[x=13,y=2,name=criticalPower,fill=red!40]{critical power}
-\node (criPower) {call maintainer};
+\node (criPower) {call technician};
 \end{umlstate}
 \umltrans[arg=Voltage drop over 20\%,pos=.5]{backupPower}{criticalPower}
 \umlVHtrans[arg=power restored,pos=.5]{criticalPower}{waiting}
