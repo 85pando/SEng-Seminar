@@ -82,7 +82,7 @@
 			\note<.>{often have litte resources \\ i.e. not `computers'}
 			\item \dots run on special purpose hardware
 			\note<.>{run on special purpose hardware}
-			\item \dots run in real-time operating system
+			\item \dots run in real-time operating systems
 			\note<.>{run in real time operating systems}
 		\end{itemize}
 	\end{itemize}
@@ -110,26 +110,22 @@
 
 \begin{frame}{Motivation}
 	\begin{itemize}
-		\item We see:
-		\note<.>{We see:}
+		\item Why embedded systems:
+		\note<.>{Why embedded sytems}
 		\begin{itemize}
 			\item Embedded Systems are everywhere!
 			\note<.>{Embedded Systems are everywhere!}
 			\item There are probably more Embedded Systems than computers out there!
 			\note<.>{There are probably more Embedded Systems than computers out there!}
-		\end{itemize}
-		\item We realize:
-		\note<.>{We realize:}
-		\begin{itemize}
 			\item Man, they must be important.
 			\note<.>{they must be important.}
 			\item There sure is some money in this.
 			\note<.>{there sure is some money in this}
 			\note<.>{\\ \textbf{some money:}\\ C-programing \\ special skills}
-			\only<7>{\item I did an internship producing an embedded system.}
-			\note<.>{and i did an internship producing an embedded system at PSI \\ monitoring device for the detector of an particle accelerator}
 		\end{itemize}
-		\end{itemize}
+		\only<6>{\item I did an internship producing an embedded system.}
+		\note<.>{and i did an internship \\ producing an embedded system at PSI \\ monitoring device for the detector of an particle accelerator}
+	\end{itemize}
 \end{frame}
 
 %\section*{Outline}
@@ -142,7 +138,7 @@
 \section{Embedded Systems Design}
 \begin{frame}{Problems}
 	\begin{itemize}
-		\item Problems in embedded Systems:
+		\item Problems in Embedded Systems:
 		\note<.>{several problems in emb-systems that are not in ``normal'' systems}
 		\begin{itemize}
 			\item deadlines
@@ -177,17 +173,17 @@
 					\note<.>{\textbf{aperiodic stimuli:}\\ occurr irregularly and unpredictably \\ often interrupts \\ i.e. alarms, failures, IO operation finished, etc}
 					\note<.>{\textbf{stimuli list:}\\best practice: stimuli list with \textbf{all} stimuli. \\ \vspace*{2em} example AFTER THIS SLIDE}
 				\end{enumerate}
-			\item Timing analysis
+			\item timing analysis
 			\note<.>{\textbf{Timing analysis:}\\ For each stimulus and response $\Rightarrow$ find timing constraints \\ timing constraints $\Rightarrow$ deadlines}
-			\item Process design
+			\item process design
 			\note<.>{\textbf{Process design:}\\ aggregate the stimuli \& responses into concurrent processes \\
 			SEE Architectural patterns}
-			\item Algorithm design
+			\item algorithm design
 			\note<.>{\textbf{Algorithm design:}\\ For each stimulus \& response $\Rightarrow$ design algorithm \\ especially important for computationally intensive tasks (signal processing) \\ Do we need to implement these in hardware? (i.e. control systems)}
-			\item Data design
+			\item data design
 			\note<.>{\textbf{Data design:}\\ How to store data, that will be exchanged \\ semaphore \& critical regions \& monitors \& \dots}
 			\note<.>{\\ \vspace*{2em} \textbf{circular buffer:} producer \& consumer may run at different speeds}
-			\item Process scheduling
+			\item process scheduling
 			\note<.>{\textbf{Process scheduling:}\\ ensure, that processes meet their deadline}
 			\note<.>{\ \\ \vspace*{2em} \textbf{all shown:}\\ not all need to be done, but most probably will \\ which \& order depends on what we design }
 			\note<.>{\\ \vspace*{1em} \textbf{after this design steps:}\\ make sure system can meet deadlines \\ static analysis \\ simulation
@@ -237,9 +233,9 @@
 \begin{frame}{Programming language}
 	\begin{itemize}
 		\item program has to be\dots
-		\note<.>{}the programming language \\ several things need to be taken into account \\ \ \\ program has to be
+		\note<.>{the programming language \\ several things need to be taken into account\\ \ \\ program has to be}
 			\begin{itemize}
-				\item \dots fast (i.e. C, Asssembler)
+				\item \dots fast (i.e. C, Assembler)
 				\note<.>{\textbf{fast: C, Assembler:}\\ No concurrency \\ no built-in system for shared resources}
 				\item \dots concurrent (i.e. C++, real time Java, \dots){}
 				\note<.>{\textbf{concurrent:}\\ and manage shared resources}
@@ -256,9 +252,9 @@
 \begin{frame}{Architectural patterns}
 	\begin{itemize}
 		\item Architectural patterns are used to describe a system in an abstract way and help to understand the architecture.
-		\note<.>{\textbf{note on the 3 patterns:}\\ The summerville book describes three rough design pattern \\ there are finer patterns that will lead to more exact design}
+		\note<.>{Architectural patterns are used to describe a system in an abstract way and help to understand the architecture. \\ \vspace*{2em} \textbf{note on the 3 patterns:}\\ The summerville book describes three rough design pattern \\ there are finer patterns that will lead to more exact design}
 		\begin{itemize}
-			\item Observe and react
+			\item Observe and React
 			\note<.>{\textbf{Observe and React:}\\ set of monitored sensors \\ Something exeptional happens $\Rightarrow$ we do something \\ i.e. monitoring, incoming phone call}
 			\item Environmental Control
 			\note<.>{\textbf{Environmental Control:}\\ set of sensors and actuators \\ can change environment \\ i.e. flash light, when sensor fires \\i.e. control water level in a tank}
@@ -279,8 +275,8 @@
 			\note<.>{\textbf{monitoring:}\\ monitor the system with a set of sensors}
 			\item display something
 			\note<.>{\textbf{display:}\\ monitoring screen \\ on exceptional behaviour: alarms, shutdown\\ }
-			\item primarly used in: Monitoring systems
-			\note<.>{primarly in \textbf{monitoring systems:}\\ often consist of more than one O\&R patterns, one for each sensor \\ optimisation: combine something, ie display on one monitor}
+			\item primarly used in: Monitoring Systems
+			\note<.>{primarly in \textbf{monitoring systems:}\\ often consist of more than one O\&R pattern \\ one for each sensor \\ optimisation: combine something, ie display on one monitor}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -330,7 +326,7 @@
 			\note<.>{\textbf{how often?:}\\ then we check, if our system can deliver this \\ this can be quite hard, when \emph{mixture of aperiodic and periodic stimuli} or \emph{many aperiodic stimuli} are expected}
 			\item aperiodic stimuly $\Rightarrow$ make assumptions
 			\note<.>{\textbf{aperiodic stimuli:} \\ make assumptions}
-			\note<.>{\\ vspace*{1em} \textbf{fast systems:}\\ use only periodic stimuli \\ poll frequently for aperiodic stimuli}
+			\note<.>{\\ \vspace*{1em} \textbf{fast systems:}\\ use only periodic stimuli \\ poll frequently for aperiodic stimuli}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -401,11 +397,11 @@
 			\item Embedded Systems are a set of processes reacting to stimuli
 			\note<.->{\\ are a set of processes reacting to stimuli}
 			\item State models help understanding the System.
-			\note<.->{\\ \textbf{state models}\\ help understanding the system}
+			\note<.->{\\ \textbf{state model} help understanding the system}
 			\item Architectural patterns can be used to help in designing the system.
-			\note<.->{\textbf{Architectural patterns} \\ help designing the system {\tiny especially first steps}}
+			\note<.->{ \\\textbf{Architectural patterns} help designing the system {\tiny especially first steps}}
 			\item Always do timing analysis in (hard) Embedded Systems.
-			\note<.->{timing analysis must always be done in (hard) systems}
+			\note<.->{\\timing analysis must always be done in (hard) systems}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
