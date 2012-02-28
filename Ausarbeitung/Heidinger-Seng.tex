@@ -178,20 +178,65 @@ As these parts are not easily exchangeable in Embedded Systems they have to be g
 He also emphasizes strongly, that there is no standard system design process for Embedded Systems.
 Instead of that, he proposes some design steps, that are sensible to use.
 Still, as there is no standard approach, some of these steps may not be feasible for a certain system and one has to think about which steps to use and which to drop.
+Also there is no fixed order in which to do the steps.
 
 \paragraph{Plattform Selection}
-
-\paragraph{Special Purpose Hardware}
+The plattform selection consists mainly of the selection of the used hardware, and the real-time operating system and the used programming language(s).
+The main factors influencing this decission are timing contraints, the kind of power available and its limitations (i.e. mobile devices), the price of the finished system and the experience and preferences of the development team.
 
 \paragraph{Stimulus/Response Analysis}
+An Embedded System can be described by a list of stimuli and their corresponding responses.
+A stimulus is an event the system has to respond to.
+The Stimulus/Response Analysis consists of thinking about what is going to happen to the system and planning appropriate responses.
+Then these stimuli and responses are composed into a list. \\
+When thinking about stimuli we have to differentiate between periodic and aperiodic stimuli:
+\begin{description}
+	\item[Periodic stimuli] describe stimuli that occur once in a fixed period.
+	They often describe the normal state of the system, where nothing special happens (i.e. polling of a sensor).
+	\item[Aperiodic stimuli] describe stimuli, that happen unexpectedly and irregularly.
+	Often they represent special situations, where action of the system is required (i.e. alarms, failures, \dots).
+\end{description}
 
 \paragraph{Timing Analysis}
+The goal of Timing Analysis is to find timing contraints for each stimulus/response pair.
+These timing contraints can then be transformed into deadlines.
+The system then needs to be designed in order to be able to meet these deadlines.
+This can be achieved through \emph{static analysis} or \emph{simulation}.
+
+\paragraph{Process design}
+The Process Design step aggregates the stimli and responses into a set of (concurrent) processes.
+This is further discussed in \emph{Architectural Patterns}.
 
 \paragraph{Algorithm Design}
+In the Algorithm Design step we transform each stimulus/response pair into an algorithm.
+This step is especially important for computationally intensive tasks like signal processing.
+If we cannot design an algorithm fast enough to accomplish deadlines, we may also decide to implement some algorithms in hardware inside this step.
 
 \paragraph{Data Design}
+The Data Design step covers the design of data structures to store all data.
+As we may have concurrent processes, we have to ensure, that the data stays consistent.
+Common practices are the use of semaphores, critical regions and monitors. \\
+When processes work at different speeds, especially if we have a producer/consumer situation, the use of (circular) buffers is advisable.
 
 \paragraph{Process Scheduling}
+A scheduling algorithm has to be devised or found, that ensures the meeting of the set deadlines.
+
+\paragraph{Special Purpose Hardware}
+In this step one must think about what to built in hardware and what in software including thought about uncommon vs. common hardware.
+If we encounter bottleneck algorithms in either the Timing Analysis or Process Scheduling steps we may think about implementing those bottlenecks in hardware (i.e. FPGA).
+
+\subsection{Real-time System Modelling}
+Events or stimuli in an Embedded System often change the system to change its state.
+Therefore it is often convenient to describe and model Embedded and Real-time Systems as \emph{state models}.
+The UML statecharts are a good way to visualize the state modell thus improving the overall understanding of the system.
+
+\subsection{Real-time Programming}
+The programming of Embedded Systems does also have to take care about the deadlines.
+Therefore on might want to use assembler languages or system-level languages as C.
+These languages provide the advantage of high efficiency, but have a downside as they do not have built-in libraries or faculties to manage shared resources or concurrency. \\
+Object Oriented languages as C++ or (embedded) Java provide these features, but come with a huge overhead due to hiding data representations in objects and thus reducing speed. \\
+The development team now has to decide, if they want to use the ease and less error-prone object oriented languages, or need the speed offered by the faster languages.
+Although faster systems (i.e. cell phones) start to appear more often, systems with very limited resources still exist.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
