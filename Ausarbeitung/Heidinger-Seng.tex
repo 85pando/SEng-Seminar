@@ -5,7 +5,39 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage[T1]{fontenc} % normaler erweitere Zeichnesatz
+\usepackage{framed}  % Ramenpaket für zum Einfügen von schönen Ramen
+\usepackage{tikz}
+
 %\usepackage{makeidx}
+
+\xdefinecolor{dunkelGruen}{HTML}{007D00}
+\xdefinecolor{dunkelBlau}{HTML}{0000A0}
+\xdefinecolor{dunkelRot}{HTML}{A00000}
+\xdefinecolor{dunkelGelb}{HTML}{FFAA00}
+\xdefinecolor{hellGelb}{HTML}{FFCC00}
+\colorlet{dGreen}{dunkelGruen}
+\colorlet{dBlue}{dunkelBlau}
+\colorlet{dRed}{dunkelRot}
+\colorlet{dYellow}{dunkelGelb}
+\colorlet{lYellow}{hellGelb}
+\newcommand{\red}[1]
+{\textcolor{red}{#1}}
+\newcommand{\blue}[1]
+{\textcolor{blue}{#1}}
+\newcommand{\green}[1]
+{\textcolor{green}{#1}}
+\newcommand{\darkRed}[1]
+{\textcolor{dRed}{#1}}
+\newcommand{\darkBlue}[1]
+{\textcolor{dBlue}{#1}}
+\newcommand{\darkGreen}[1]
+{\textcolor{dGreen}{#1}}
+\newcommand{\darkYellow}[1]
+{\textcolor{dYellow}{#1}}
+\newcommand{\yellow}[1]
+{\textcolor{lYellow}{#1}}
 
 \author{Stephan Heidinger}
 \title{Software Engineering in Embedded Systems}
@@ -14,95 +46,200 @@
 
 \maketitle
 
+\fancypagestyle{plain}
+{
+    \fancyhead{}
+    \fancyfoot{}
+}	% clear header and footer of plain page because of ToC
 \tableofcontents
-
 \newpage
+%\cleardoublepage %start new page
+\fancypagestyle{plain}
+{
+    \fancyhead{}
+    \fancyfoot[C]{thepage}
+}	% re-define plain page after the ToC
+\setcounter{page}{1} %reset the page counter
 
-%\begin{abstract}
-%The abstract should summarize the contents of the paper using at least 70 and at most 150 words. It will be set in 9-point font size and be inset 1.0 cm from the right and left margins. There will be two blank lines before and after the Abstract. \dots
-%\end{abstract}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
 	%what is the problem
 	%what is the state of the art
 	%what open problems exist
 
-fully prepare reader for what follows
-– gradually lead the reader to new territory
-– at most one-eighth of your text
-– suggested issues to be addressed
-	topic
-		* start from shared knowledge
-		* establish common ground between you and reader
-	thesis
-		* what do you want to prove
-		* clarify the question that is addressed by your paper
-	orientation
-		* provide background for understanding your argument
-	organization
-		* what will follow
+This report will introduce into some characteristic features of developing software in \emph{Embedded Systems}.
+\\ \red{do some introduction}
 
 
+
+
+%\subsection{Orientation}
+
+\subsection{Organisation}
+
+%fully prepare reader for what follows
+%– gradually lead the reader to new territory
+%– suggested issues to be addressed
+%	topic
+%		* start from shared knowledge
+%		* establish common ground between you and reader
+%	thesis
+%		* what do you want to prove
+%		* clarify the question that is addressed by your paper
+%	orientation
+%		* provide background for understanding your argument
+%	organization
+%		* what will follow
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Preliminaries / Foundations}
 	%e.g., the mathematical model used, the starting point
+\subsection{Embedded Systems}
+Before talking about how to develop software for \emph{Embedded Systems} I would like to establish what Embedded Systems are.
+Unfortunately there is no strict definition.
+But when looking into the subject, one finds certain points surfacing in many definitions and descriptions:
+\begin{itemize}
+	\item Embedded Systems respond to a physical world.
+	\item Embedded Systems have to respond in real time.
+	\item Embedded Systems often have only little resources.
+	\item Embedded Systems often run on special purpose hardware.
+	\item Embedded Systems use real-time operating systems.b
+\end{itemize}
+Therefore it is convenient to stick to Sommervilles definition of \emph{Embedded Systems}:
+\\
+\hspace*{2em}
+\begin{tabular}{p{10.5cm}}
+\textit{``An \emph{embedded software system} is part of a hardware/software system that reacts to events in its environment.
+The software is ‘embedded’ in the hardware.
+Embedded systems are nominaly real-time systems.''}
+\cite[p. 561]{sommerville}
+\end{tabular}
+\\
+\emph{Embedded Software} is the part of an Embedded System, that consists of software.
+\subsection{Motivation}
+Why would I want to talk about Embedded Systems?
+Well, they are everywhere. When we look around ourselves, we'll quickly realize, how many Embedded Systems are there actually and that there are probably even more of them than regular computers.
+Among them we could find phones, routers, burglar alarms, coffee machines, any automated system in a car like airbags or distance warners and many more.\\
+Upon realizing how many Embedded Systems we use in our daily life, we certainly realize, that embedded systems must be quite important.
+Personally I choose this topic, because prior to starting my studies in Constance I did an internship producting a monitoring device for detectors used in the neutron spallation source SINQ at the PSI in Villigen, Switzerland.
 
-\section{The Approach}
-	%describe the approach
-	%this can be 1-3 sections
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Embedded Systems Design}
+\subsection{Problems}
+Because of the special circumstances of Embedded Systems we are faced with some problems, that are not important, or at least not as important in regular software.
+
+\paragraph{Deadlines:}
+Embedded Systems have to react in real time.
+Therefore they have to meet certain deadlines upon which results have to be ready or certain actions be taken.
+Deadlines are probably the most important problem we are faced with, when developing Embedded Software.
+Therefore Emebedded Systems can be divided into one of two categories depending on the results to meeting a deadline.
+
+\begin{description}
+	\item[Hard Software Systems] are systems where the whole programm will fail, when a deadline is not met.
+	This includes i.e. safety critical applications like airbags, ejection seats, water level control systems, \dots
+	\item[Soft Software Systems] are systems, where the result will degrade when deadlines are not met.
+	Eventually the system will fail with an increasing number of unmet deadlines. This includes i.e. signal processing, signal transmission, \dots
+\end{description}
+
+\paragraph{Environment:}
+Embedded Systems have to respond to a physical world. This physical world is not a single state world.
+Rather it is constantly changing, which has to be taken into account when developing Embedded Systems.
+We may need to react to multiple events at the same time and also need to verify that a result is still valid upon producing this result.
+This could best be achieved with a concurrent design, but when we encounter really short deadlines, concurrent languages may not be fast enough.
+
+\paragraph{Continuity:}
+In many cases Embedded Systems run continuously, so they never terminate.
+Therefore Embedded Software has to be reliable, because it is not feasible to just restart them when encountering an error.
+Additionally we may need to be able to update the software while it is running.
+
+\paragraph{Direct Hardware Interaction:}
+As Embedded Systems do a wide variety of work, we will encounter a similar variety of specialized and uncommon hardware, i.e. detonators in an airbag, special sensors, special output devices.
+In some cases this hardware may even be designed especially for our system.
+It is therefore very probable, that we need to develop drivers for this hardware along with the Embedded System to be able to use it.\\
+In some cases, when our system cannot possibly meet some deadlines, it is advisable to implement some functions not in software, but in hardware, as this is generally faster.
+
+\paragraph{Safety \& Reliability:}
+Embedded Systems are in many cases responsible for the well-being of living creatures, i.e. airbags, ejection seats, handle dangerous material, i.e. in a nuclear power plant, or are otherwise used in processes with potentially dangerous to catastrophic results upon failure.
+These failures may then lead to high costs, either economicaly or in (human) life.
+To reduce these risks special care needs to be taken to ensure correctness of such systems.
+
+\subsection{Design Steps}
+Certain decissions about hardware, i.e. its performance, costs, power consumption (especially in mobile devices), strongly affect the overall performance of the system.
+As these parts are not easily exchangeable in Embedded Systems they have to be given early consideration and Sommverille does not encourage a top-down approach.
+He also emphasizes strongly, that there is no standard system design process for Embedded Systems.
+Instead of that, he proposes some design steps, that are sensible to use.
+Still, as there is no standard approach, some of these steps may not be feasible for a certain system and one has to think about which steps to use and which to drop.
+
+\paragraph{Plattform Selection}
+
+\paragraph{Special Purpose Hardware}
+
+\paragraph{Stimulus/Response Analysis}
+
+\paragraph{Timing Analysis}
+
+\paragraph{Algorithm Design}
+
+\paragraph{Data Design}
+
+\paragraph{Process Scheduling}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Architectural Patterns}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Timing Analysis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Real-time Operating Systems}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Examples / Case Studies}
 
 	%what did the authors do to validate their work?
 	%your OWN example / case studies
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Assessment}
 	%your OWN (critical) assessment of the merit of the work
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
 	%summarize the report and your assessment in 2-4 sentences
 	%what open issues remain
 
-%\section{Bibliography}
-	%put the references here
-	%LaTeX / BibTeX will do this automatically!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliography{lit}
+\bibliographystyle{alpha}
 
-%% ---- Bibliography ----
-%%
-%\begin{thebibliography}{5}
-%%
-%\bibitem {clar:eke}
-%Clarke, F., Ekeland, I.:
-%Nonlinear oscillations and
-%boundary-value problems for Hamiltonian systems.
-%Arch. Rat. Mech. Anal. 78, 315--333 (1982)
-
-%\bibitem {clar:eke:2}
-%Clarke, F., Ekeland, I.:
-%Solutions p\'{e}riodiques, du
-%p\'{e}riode donn\'{e}e, des \'{e}quations hamiltoniennes.
-%Note CRAS Paris 287, 1013--1015 (1978)
-
-%\bibitem {mich:tar}
-%Michalek, R., Tarantello, G.:
-%Subharmonic solutions with prescribed minimal
-%period for nonautonomous Hamiltonian systems.
-%J. Diff. Eq. 72, 28--55 (1988)
-
-%\bibitem {tar}
-%Tarantello, G.:
-%Subharmonic solutions for Hamiltonian
-%systems via a $\bbbz_{p}$ pseudoindex theory.
-%Annali di Matematica Pura (to appear)
-
-%\bibitem {rab}
-%Rabinowitz, P.:
-%On subharmonic solutions of a Hamiltonian system.
-%Comm. Pure Appl. Math. 33, 609--633 (1980)
-%
-%\end{thebibliography}
-
-\section{Appendix}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Appendix}
 	%any auxiliary materials that can be of interest
 	%no more than 3-5 pages
 \end{document}
