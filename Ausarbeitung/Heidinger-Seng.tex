@@ -1,14 +1,24 @@
-\documentclass[10pt,a4paper,titlepage,draft]{report} %change draft to final
+\documentclass[10pt,a4paper,titlepage,draft]{article} %change draft to final
 
-\usepackage[utf8x]{inputenc}
-\usepackage{ucs}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{fancyhdr}
+%\usepackage{color}
+\usepackage{colortbl}
+\usepackage[english]{babel}
+%\usepackage{fancyhdr}
 \usepackage[T1]{fontenc} % normaler erweitere Zeichnesatz
 \usepackage{framed}  % Ramenpaket für zum Einfügen von schönen Ramen
+\usepackage[utf8x]{inputenc}
 \usepackage{tikz}
+\usepackage{tikz-uml}
+\usepackage{sidecap}
+\usepackage{ucs}
+
+%%this is used for boxes around figures
+%\usepackage{float}
+%\floatstyle{boxed} 
+%\restylefloat{figure}
 
 %\usepackage{makeidx}
 
@@ -38,6 +48,7 @@
 {\textcolor{dYellow}{#1}}
 \newcommand{\yellow}[1]
 {\textcolor{lYellow}{#1}}
+\definecolor{gray}{rgb}{0.7,0.7,0.7}
 
 \author{Stephan Heidinger}
 \title{Software Engineering in Embedded Systems}
@@ -46,19 +57,10 @@
 
 \maketitle
 
-\fancypagestyle{plain}
-{
-    \fancyhead{}
-    \fancyfoot{}
-}	% clear header and footer of plain page because of ToC
+\pagestyle{empty}
 \tableofcontents
 \newpage
-%\cleardoublepage %start new page
-\fancypagestyle{plain}
-{
-    \fancyhead{}
-    \fancyfoot[C]{thepage}
-}	% re-define plain page after the ToC
+\pagestyle{plain}
 \setcounter{page}{1} %reset the page counter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,10 +73,7 @@
 	%what open problems exist
 
 This report will introduce into some characteristic features of developing software in \emph{Embedded Systems}.
-\\ \red{do some introduction}
-
-
-
+\marginpar{\red{do some introduction}}
 
 %\subsection{Orientation}
 
@@ -107,9 +106,9 @@ But when looking into the subject, one finds certain points surfacing in many de
 \begin{itemize}
 	\item Embedded Systems respond to a physical world.
 	\item Embedded Systems have to respond in real time.
-	\item Embedded Systems often have only little resources.
+	\item Embedded Systems often have only small amount of resources.
 	\item Embedded Systems often run on special purpose hardware.
-	\item Embedded Systems use real-time operating systems.b
+	\item Embedded Systems use real-time operating systems.
 \end{itemize}
 Therefore it is convenient to stick to Sommervilles definition of \emph{Embedded Systems}:
 \\
@@ -117,16 +116,17 @@ Therefore it is convenient to stick to Sommervilles definition of \emph{Embedded
 \begin{tabular}{p{10.5cm}}
 \textit{``An \emph{embedded software system} is part of a hardware/software system that reacts to events in its environment.
 The software is ‘embedded’ in the hardware.
-Embedded systems are nominaly real-time systems.''}
-\cite[p. 561]{sommerville}
+Embedded systems are nominaly real-time systems.''\cite[p. 561]{sommerville} }
 \end{tabular}
-\\
+
 \emph{Embedded Software} is the part of an Embedded System, that consists of software.
+
 \subsection{Motivation}
 Why would I want to talk about Embedded Systems?
-Well, they are everywhere. When we look around ourselves, we'll quickly realize, how many Embedded Systems are there actually and that there are probably even more of them than regular computers.
-Among them we could find phones, routers, burglar alarms, coffee machines, any automated system in a car like airbags or distance warners and many more.\\
+Well, they are everywhere. When we look around ourselves, we'll quickly realize, how many Embedded Systems there actually are and that there are probably more of them than regular computers.
+Among them we find phones, routers, burglar alarms, coffee machines, any automated system in a car like airbags or distance warners and many more.
 Upon realizing how many Embedded Systems we use in our daily life, we certainly realize, that embedded systems must be quite important.
+
 Personally I choose this topic, because prior to starting my studies in Constance I did an internship producting a monitoring device for detectors used in the neutron spallation source SINQ at the PSI in Villigen, Switzerland.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -139,13 +139,13 @@ Because of the special circumstances of Embedded Systems we are faced with some 
 
 \paragraph{Deadlines:}
 Embedded Systems have to react in real time.
-Therefore they have to meet certain deadlines upon which results have to be ready or certain actions be taken.
+Therefore they have to meet certain deadlines upon which results have to be ready or certain actions been taken.
 Deadlines are probably the most important problem we are faced with, when developing Embedded Software.
-Therefore Emebedded Systems can be divided into one of two categories depending on the results to meeting a deadline.
+Therefore Emebedded Systems can be divided into one of two categories depending on the results to not meeting a deadline.
 
 \begin{description}
-	\item[Hard Software Systems] are systems where the whole programm will fail, when a deadline is not met.
-	This includes i.e. safety critical applications like airbags, ejection seats, water level control systems, \dots
+	\item[Hard Software Systems] are systems where the whole programm will fail, if a deadline is not met.
+	This includes i.e. safety critical applications like airbags, ejection seats, \dots
 	\item[Soft Software Systems] are systems, where the result will degrade when deadlines are not met.
 	Eventually the system will fail with an increasing number of unmet deadlines. This includes i.e. signal processing, signal transmission, \dots
 \end{description}
@@ -157,15 +157,16 @@ We may need to react to multiple events at the same time and also need to verify
 This could best be achieved with a concurrent design, but when we encounter really short deadlines, concurrent languages may not be fast enough.
 
 \paragraph{Continuity:}
-In many cases Embedded Systems run continuously, so they never terminate.
+In many cases Embedded Systems run continuously, they never terminate.
 Therefore Embedded Software has to be reliable, because it is not feasible to just restart them when encountering an error.
 Additionally we may need to be able to update the software while it is running.
 
 \paragraph{Direct Hardware Interaction:}
 As Embedded Systems do a wide variety of work, we will encounter a similar variety of specialized and uncommon hardware, i.e. detonators in an airbag, special sensors, special output devices.
-In some cases this hardware may even be designed especially for our system.
-It is therefore very probable, that we need to develop drivers for this hardware along with the Embedded System to be able to use it.\\
-In some cases, when our system cannot possibly meet some deadlines, it is advisable to implement some functions not in software, but in hardware, as this is generally faster.
+In some cases this hardware may even be designed directly for our system.
+It is therefore very probable, that we need to develop drivers for the used hardware along with the Embedded System to be able to use it.
+\\
+In some cases, when our system cannot possibly meet some deadlines, it is advisable to implement some functions in hardware instead of in software, as this is generally faster.
 
 \paragraph{Safety \& Reliability:}
 Embedded Systems are in many cases responsible for the well-being of living creatures, i.e. airbags, ejection seats, handle dangerous material, i.e. in a nuclear power plant, or are otherwise used in processes with potentially dangerous to catastrophic results upon failure.
@@ -174,21 +175,22 @@ To reduce these risks special care needs to be taken to ensure correctness of su
 
 \subsection{Design Steps}
 Certain decissions about hardware, i.e. its performance, costs, power consumption (especially in mobile devices), strongly affect the overall performance of the system.
-As these parts are not easily exchangeable in Embedded Systems they have to be given early consideration and Sommverille does not encourage a top-down approach.
+As these parts are not easily exchangeable in Embedded Systems they have to be given early consideration and Sommverille does not encourage a top-down approach\cite[p. 540]{sommerville}.
 He also emphasizes strongly, that there is no standard system design process for Embedded Systems.
 Instead of that, he proposes some design steps, that are sensible to use.
 Still, as there is no standard approach, some of these steps may not be feasible for a certain system and one has to think about which steps to use and which to drop.
 Also there is no fixed order in which to do the steps.
 
 \paragraph{Plattform Selection}
-The plattform selection consists mainly of the selection of the used hardware, and the real-time operating system and the used programming language(s).
+The plattform selection consists mainly of the selection of the used hardware, the real-time operating system and the used programming language(s).
 The main factors influencing this decission are timing contraints, the kind of power available and its limitations (i.e. mobile devices), the price of the finished system and the experience and preferences of the development team.
 
 \paragraph{Stimulus/Response Analysis}
 An Embedded System can be described by a list of stimuli and their corresponding responses.
 A stimulus is an event the system has to respond to.
 The Stimulus/Response Analysis consists of thinking about what is going to happen to the system and planning appropriate responses.
-Then these stimuli and responses are composed into a list. \\
+Then these stimuli and responses are composed into a list.
+
 When thinking about stimuli we have to differentiate between periodic and aperiodic stimuli:
 \begin{description}
 	\item[Periodic stimuli] describe stimuli that occur once in a fixed period.
@@ -200,8 +202,8 @@ When thinking about stimuli we have to differentiate between periodic and aperio
 \paragraph{Timing Analysis}
 The goal of Timing Analysis is to find timing contraints for each stimulus/response pair.
 These timing contraints can then be transformed into deadlines.
-The system then needs to be designed in order to be able to meet these deadlines.
-This can be achieved through \emph{static analysis} or \emph{simulation}.
+The system needs to be designed in order to be able to meet these deadlines.
+This can be achieved through \emph{static analysis} or \emph{simulation} and will be discussed later.
 
 \paragraph{Process design}
 The Process Design step aggregates the stimli and responses into a set of (concurrent) processes.
@@ -210,13 +212,14 @@ This is further discussed in \emph{Architectural Patterns}.
 \paragraph{Algorithm Design}
 In the Algorithm Design step we transform each stimulus/response pair into an algorithm.
 This step is especially important for computationally intensive tasks like signal processing.
-If we cannot design an algorithm fast enough to accomplish deadlines, we may also decide to implement some algorithms in hardware inside this step.
+If we cannot design an algorithm fast enough to accomplish deadlines, we may also decide to implement some algorithms in hardware.
 
 \paragraph{Data Design}
 The Data Design step covers the design of data structures to store all data.
 As we may have concurrent processes, we have to ensure, that the data stays consistent.
-Common practices are the use of semaphores, critical regions and monitors. \\
-When processes work at different speeds, especially if we have a producer/consumer situation, the use of (circular) buffers is advisable.
+Common practices are the use of \emph{semaphores}, \emph{critical regions} and \emph{monitors}.
+
+When processes work at different speeds, especially if we have a pro\-du\-cer/con\-sumer situation, the use of \emph{(circular) buffers} is advisable.
 
 \paragraph{Process Scheduling}
 A scheduling algorithm has to be devised or found, that ensures the meeting of the set deadlines.
@@ -232,35 +235,200 @@ The UML statecharts are a good way to visualize the state modell thus improving 
 
 \subsection{Real-time Programming}
 The programming of Embedded Systems does also have to take care about the deadlines.
-Therefore on might want to use assembler languages or system-level languages as C.
-These languages provide the advantage of high efficiency, but have a downside as they do not have built-in libraries or faculties to manage shared resources or concurrency. \\
-Object Oriented languages as C++ or (embedded) Java provide these features, but come with a huge overhead due to hiding data representations in objects and thus reducing speed. \\
+Therefore one might want to use assembler languages or system-level languages as C.
+These languages provide the advantage of high efficiency, but have a downside as they do not have built-in libraries or faculties to manage shared resources or concurrency.
+Object Oriented languages as C++ or (embedded) Java provide these features, but come with a huge overhead due to hiding data representations in objects and thus reducing speed.
+
 The development team now has to decide, if they want to use the ease and less error-prone object oriented languages, or need the speed offered by the faster languages.
-Although faster systems (i.e. cell phones) start to appear more often, systems with very limited resources still exist.
+Although faster systems (i.e. cell phones) start to appear more often thus reducing the need for fast languages, systems with very limited resources still exist.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Architectural Patterns}
+According to Sommerville, Architectural Patterns are not supposed to be a \textit{``generic design to be instantiated''\cite[p. 547]{sommerville}}.
+He wants them to be understood as a means to gain and infer knowledge about the system, describing them as \textit{``encapsulat[ing] knowledge about the organisation of system architectures, when these architectures should be used and their advantages and disadvantages''\cite[p.547]{sommerville}}.
+Furhtermore he describes describes only three rough patterns that would lead to a very inefficient system if the not optimized before implementation.
+Still these patterns are usefull for a first design approach until more knowledge about the workings of the system can be generated.
+
+\subsection{Observe and React}
+The \emph{Observe and React} pattern is mainly used for monitoring systems.
+It consists of a set of sensors and most commonly some kind of display.
+During normal operation the system checks each sensor according to timing contraints and most commonly displays the state of the environment.
+When the system encounters exceptional situations the system may flash an alert via changing the display, activating an alarm or contacting someone directly.
+In some cases it may be convenient to also take some precautionary action like shutting down a system to prevent damage.
+
+In a first approach it is convenient to use one display for every sensor, but iterative improvements may merge displays until eventually the system will result in a small number of display devices.
+
+\subsection{Environmental Control}
+The \emph{Environmental Control} pattern is used in systems, where the system controls the sate of the environment.
+It consists of a set of sensors and a set of actors.
+Through the sensors the system learns about the current state of the controlled environment.
+If this state differs from the desired state, the system will take direct action to correct this state back towards the desired one.
+In most cases there will be monitoring of the actors as well, althought the controll and monitoring of actors may be merged for increased performance or feedback loops may be integrated.
+A display or set of displays to present the current state may be sensible.
+
+This pattern is usefull, when human supervision is not practical, for example when a simple task like the keeping of a fluid level is required, the system has to deal with many quickly changing variables like in an airbag or ABS system or when there are just to many variables to take into consideration.
+
+\subsection{Process Pipelining}
+The \emph{Process Pipelining} pattern is used in systems that have to work with a huge amount of data at the same time (i.e. data collection or data transformation).
+As the data may need to be processed quickly to prevent the loss of incoming data, the pattern breaks the processing up into small steps, which are then executed by several concurrent processes.
+This approach is especially efficient in systems using multiple or multicore processors.
+As results are produced and consumed, use of buffers is advisable.
+
+Another variant of the \emph{Process Pipelining} pattern are data aquisition systems, where huge amounts of data are collected and have to be stored for later processing.
+It is common to use buffers to temporarily store the data before it can be written to storage.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Timing Analysis}
+As expressed before, the meeting of deadlines are essential in Embedded Systems.
+\emph{Timing Analysis} is used to ensure that the system is able to meet its deadlines, by calculating how often each processes needs to be started so that results are produces before its deadline.
+In hard software systems timing analysis must be done, while it is strongly recommended in soft systems.
+
+As Embedded Systems normaly have to cope with a mixture of periodic and aperiodic stimuli, timing analysis is hard, as we have to predict how often aperiodic stimuli occur and our prediction may just be wrong.
+When the software runs on faster hardware one might decide to simulate aperiodic stimuli as periodic stimuli.
+In this case one has to make sure, that the cause of the aperiodic stimulus is checked often enough, that approriate action can be taken in order to meet the deadline.
+
+Sommerville describes three key factors that have to be considered in timing analysis:
+\begin{description}
+	\item[Deadlines] are the points in time, where the stimulus must be processed and a result be available.
+	\item[Frequency] is the number of times per second a process must be executed in order to be able to meet its deadlines.
+	\item[Execution Time] is the time needed to process the stimulus and produce the result.
+	You have to distinguish between \emph{average} and \emph{worst execution time}.
+	In hard software systems you will always need to consider the worst case time.
+\end{description}
+When you gather this data, it is preferable to list each kind of sensor/stimulus seperately, even if they have the same timing requirements, as this allows more easily for future changes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Real-time Operating Systems}
+An integral part of every Embedded Software System is the operating system the software is running on.
+In most cases, regular operating systems are not needed for the task of the Embedded system.
+Due to nice graphical user interfaces, huge amounts of libraries probably not used in an Embedded System and more those systems tend to be slow and don't allow a fine grained controll over things we may need to control in Embedded Software.
+The operating systems in Embedded systems are called \emph{Real-time Operating Systems} or \emph{RTOS}.
+These are mostly systems, that are reduced to a core functionality, thus gaining speed and giving more direct control to the user.
+Some common systems are \emph{emdebian}, \emph{Windows/CE}, \emph{VXWorks} and \emph{RTLinux}.
+
+The interesting question presenting itself is, of course, what those ``core funtionalites'' are.
+According to Sommerville there are five things every RTOS must feature:
+\begin{description}
+	\item[A real-time clock] that delivers information for the scheduler.
+	\item[An interrupt handler] which allows important processes to interrupt other, less important processes.
+
+	RTOS' have to be able to manage at least two different priorities, \emph{interrupt level} and \emph{clock level}.
+	The former are processes with a high priority like processes with a fast reaction time or a close deadline.
+	The real-tim clock is one of these processes.
+	They have to be allowed to interrupt other processes for the system as a whole to work and be successfull.
+	The latter are primarly periodic processes.
+
+	There may also be more levels to allow for finer tuned distinction and for background processes that are not very important. Also there may be distinctions inside those levels. The correct allocation of priorities requires extensive analysis and often simulation.
+	\item[A scheduler] for deciding which processes to execute at which time.
+
+	Schedulers can be seperated into two classes: \emph{pre-emptive} and \emph{non-pre-emptive}, where the former is allowed to stop running processes to allow other processes to run while the latter lets a process run until termination upon starting it.\\
+	Common strategies are \emph{round-robin}, where each process is granted a time-slot until the next process is executed, \emph{rate monolithic} or \emph{shortes job first} scheduling, where the job with the shortes execution time will be started first, and \emph{shortes deadline first} or \emph{highest priority first}, where the job with the highest priority get preference over other processes.
+	\item[A resource manager] for allocation of system resources (i.e. memory and processor time) to the processes.
+	\item[A dispatcher] to start execution of processes.
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Examples / Case Studies}
+\section{Examples}
 
+\subsection{Radiation Warning System}
+Imagine we want to built a experiment environment built around an nuclear reactor.
+The whole complex is sufficiently shielded, so we don't need to take care about any radiation on the outside.
+Requirements are, that we have multiple rooms adjacent to the reactor, where we want to conduct our experiments.
+As we have people working in these rooms, we need to make sure radiation levels inside our complex are below certain thresholds.
+We install sets of sensors in every room to check the radiation levels.
+This will lead us to something like the layout shown in figure~\ref{fig:radWarner}.
+
+\paragraph{Stimuli/Response Analysis}
+Next we need to look at the possible stimuli we may encounter in this environment and the responses we may want to take.
+When a single sensor detects a violation of the radiation threshold (`goes positive'), we are not overly concerned, as this has to be confirmed by at least one more sensor.
+Nevertheless a yellow warning light around the sensor should be flashed, so the people working here will be informed.
+As soon as a second sensor in the same room also detects a threshold violation, we are certain enough, that something is wrong and we flash a red warning light in the whole room to inform the people working here.
+Additionally we sound an acoustic alarm.
+
+When the system detects a low voltage drop of $10-20\%$ this might still be a normal fluctuation, still we want to run a power supply test.
+When the voltage drops further ($>20\%$) we switch to a backup power supply and notify a technician to reestablish power to the system.
+
+This will eventually lead to a listing as proposed in table~\ref{tab:radWarner}.
+\begin{table}[h]
+\begin{tabular}{|p{4cm}|p{7.2cm}|}
+\hline %-----------------------------
+\rowcolor{gray} Stimulus & Response \\
+\hline %-----------------------------
+single sensor in one room positive & flash yellow light around sensor \\
+\hline %-----------------------------
+two sensors in one room positive & flash red light in the room, sound acoustic alarm in the room\\
+\hline %-----------------------------
+Voltage drop of $10-20\%$ & run power supply test\\
+\hline %-----------------------------
+Voltage drop of $>20\%$ & switch to backup power, run power supply test, call technician\\
+\hline %-----------------------------
+\end{tabular}
+\caption{List of stimuli and responses.}
+\label{tab:radWarner}
+\end{table}
+
+\paragraph{System Modelling}
+
+For the understanding and presentation of the system, we want to represent the system as a state chart using the UML language as shown in figure~\ref{fig:radState}.
+In the `waiting' state we do nothing.
+When the first sensor in a room goes positive, we go into an `one alarm active' state which can be left by manual interaction or a second sensor going positive.
+While the former brings us back into the waiting state, the latter would lead us into the `two alarms active' state which can only be left by manual interaction.
+Upon a voltage drop of $10-20\%$ we go into the `low power' state and upon a further drop we go into the `critical power' state, both of which will be left for the waiting state upon power being restored.
+
+\paragraph{Timing Analysis}
+As timing requirements we define the requitements in table~\ref{tab:radTime}\marginpar{\red{Fix the numbering??}}.
+We need to make sure, that we poll each sensor once inside $500ms$.
+As we have four rooms with two sensors per room, and an additional sensor for the power supply, we get a total of 9 sensors.
+Considering that we have to wait for two sensors two become positive and including a safety margin of $20\%$, we need to run our polling process at least once every $\displaystyle t=\frac{0.8\cdot500ms}{9\cdot2}=22ms$. The other timing requirements a mostly dependend on how the hardware is built, as it takes only a short impulse to activate a light or initate the alertion of the technician.
+
+
+\begin{table}[h]
+\begin{tabular}{|p{4cm}|p{7.2cm}|}
+\hline %-----------------------------
+\rowcolor{gray} Stimulus/Response & Timing Requirement \\
+\hline %-----------------------------
+voltage drop detection & switch to backup: 50ms \\
+\hline %-----------------------------
+sensor reaction & poll twice a second \\
+\hline %-----------------------------
+light activation & 500 ms \\
+\hline %-----------------------------
+alert technician & 5000ms \\
+\hline %-----------------------------
+\end{tabular}
+\label{tab:radTime}
+\caption{List of Timing Requirements}
+\end{table}
 	%what did the authors do to validate their work?
 	%your OWN example / case studies
+
+\subsection{MCUMultiCom}
+As mentioned in the Motivation I did an internship in the PSI in Villigen.
+My work was creating a module/library for communication with an interface that can be used to communicate with the detectors of a neutron source called MCU.
+This module was destined to be used in embedded displays as well as on regular PCs for the monitoring and in some cases also the control of the detectors.
+The decission for the RTOS and hardware were made beforehand by the members of the PSI.
+The RTOS was emdebian, a Debian-Gnu/Linux distribution for embedded systems and fairly oversized processor and ram.
+The programming language, also decided by the PSI, was C++ with the Qt-libraries as they provide an easy cross-compiling chain for Linux, Windows and MacOS.
+As the systems was to be primarly a monitoring device, no stimuli/response pairs were used.
+Instead the system was modelled in a way, that priorities were used for each variable.
+These priorities were used to calculate the frequency with which the variables were to be polled.
+This was achieved by polling all the variables of the same priority in one process.
+These processes were then executed according to their priorities with each level being polled once for two pollings of the higher levels.
+
+Due to unsifficient knowledge on my part most proposed design steps were skipped with only a pseudo process scheduling (as described above), the data and algorithm design steps having taken place.
+This led eventually to a working design, which could in many places have been improved if some more knowledge of the design had been present.
+Very much time went into simulation to ensure the outcome of a working product to overcome this shortcoming.
+
+Nevertheless the internship was consideres successfully, as it allows for quick production of small displays, that can either be implemented as monitoring devices inside the detector area, of larger displays in the office buildings, or running on the computers used by the scientists themselves.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -275,6 +443,7 @@ Although faster systems (i.e. cell phones) start to appear more often, systems w
 	%summarize the report and your assessment in 2-4 sentences
 	%what open issues remain
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -284,7 +453,23 @@ Although faster systems (i.e. cell phones) start to appear more often, systems w
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter*{Appendix}
+\cleardoublepage
+\appendix
+\section{Appendix}
 	%any auxiliary materials that can be of interest
 	%no more than 3-5 pages
+
+\begin{figure}[h]
+\centering
+\input{rad-warner.tex}
+\caption{Sketch of our experiment environment setup.}
+\label{fig:radWarner}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\scalebox{.7}{\input{rad-warner-state.tex}}
+\caption{UML state chart of our system.}
+\label{fig:radState}
+\end{figure}
 \end{document}
