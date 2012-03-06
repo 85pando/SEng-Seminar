@@ -72,7 +72,7 @@
 	%what is the state of the art
 	%what open problems exist
 
-This report will introduce an approach to the development of \emph{Embedded Software Systems} and \emph{Embedded Systems} as a whole. The source is based on the Book \textit{``Software Engineering''}\cite[chapter 20]{sommerville}.
+This report will introduce an approach to the development of \emph{Embedded Software Systems} and \emph{Embedded Systems} as a whole. The report is based on the Book \textit{``Software Engineering''}\cite[chapter 20]{sommerville}.
 
 \subsection{Orientation}
 Before talking about how to develop software for \emph{Embedded Systems} I would like to establish what Embedded Systems are.
@@ -444,13 +444,13 @@ alert technician & 5000ms \\
 During my internship at the PSI I produced an Embedded System without any specific knowledge of Software Engineering or the special requirements for Embedded Systems themselves.
 Many of the steps described by Sommerville were done by the people working at PSI, i.e. the choice of hardware, RTOS and programming language.
 
-In the early stages of the project we ran into some misunderstandings concerning the design of the system. If I had done proper system design, this misunderstandings would probably not have happened as this would surely have been noticed in the state charts.
+In the early stages of the project we ran into some misunderstandings concerning the design of the system. If I had done proper system design, this misunderstandings could probably have been prevented as the misunderstandings would have been discovered in the state charts.
 
 A huge problem I encountered was scheduling the polling of sensor data.
 At a first look, this problem coul have been solved through proper timing analysis.
 I however think timing analysis may have helped a little, but the problem would still have persisted, as the system design required a possibility for the user to change the priority of the sensors during runtime and the system should additionally reduce the frequency of polling if the system state stays consistent for a certain amount of time (which again could be set by the user).
 
-Although not everything Sommerville describes may be usefull in every Embedded System design process, I think this introduction into this field is really usefull.
+Although not everything Sommerville describes may be usefull in every Embedded System design process, I think this introduction into the field of Embedded Software Engineering field is really usefull.
 Embedded System design is as broad a field, as Embedded Systems are.
 They do themselves have a huge variety in how they are built, how they work and what they do, so that a single chapter will only be able to provide a lookout into this field.
 When planning to work into this field, more specific study will be required.
